@@ -1,0 +1,19 @@
+{
+  "name": "waquire",
+  "version": "0.0.1",
+  "description": "A tool to bundle multiple .wa(s)t-files together.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "codeartisticninja",
+    "url": "http://codeartistic.ninja/"
+  },
+  "license": "ISC",
+  "homepage": "https://github.com/FantasyInternet/waquire#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FantasyInternet/waquire.git"
+  }
+}
