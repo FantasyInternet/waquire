@@ -1,18 +1,8 @@
 (module
-
-
-;;@require $fi "./_fantasyinternet.wast"
-;;@require $str "./_strings.wast"
-;;@require $gfx "./_graphics.wast"
-;;@require $mem "./_memory.wast"
-
-
-;;--------;;--------;;--------;;--------;;--------;;--------;;--------;;
-
-
-
-
-
+  ;;@require $fi "./_fantasyinternet.wast"
+  ;;@require $str "./_strings.wast"
+  ;;@require $gfx "./_graphics.wast"
+  ;;@require $mem "./_memory.wast"
 
 
   ;; Table for callback functions.
@@ -23,7 +13,6 @@
 
   ;; Linear memory.
   (memory $memory 1)
-    (export "memory" (memory $memory))
     (data (i32.const 0xf100) "Hello again!\n\1b[1mBold!\1b[m\n\1b[3mItalic!\1b[m\n\1b[4mUnderline!\1b[m\n\1b[9mCrossed out!\1b[m\n")
     (data (i32.const 0xf200) "Colors!\n\1b[30mblack?\1b[m\n\1b[31mred\1b[m\n\1b[32mgreen\1b[m\n\1b[33myellow\1b[m\n\1b[34mblue")
     (data (i32.const 0xf300) "\1b[m\n\1b[35mmagenta\1b[m\n\1b[36mcyan\1b[m\n\1b[37mwhite\n")
@@ -36,6 +25,7 @@
     (data (i32.const 1120) "./images/font.png");;17
     (data (i32.const 1160) "http://codeartistic.ninja");;25
     (data (i32.const 1190) "readImage");;9
+    (export "memory" (memory $memory))
 
   ;; Global variables
   (global $readImage (mut i32) (i32.const 0))
@@ -128,26 +118,4 @@
     (call $fi.shutdown)
   )
   (export "break" (func $break))
-
-
-
-
-;;--------;;--------;;--------;;--------;;--------;;--------;;--------;;
-
-
-
-
-
- 
-  
-
- 
-
-
-
-
-
-
-
-
 )

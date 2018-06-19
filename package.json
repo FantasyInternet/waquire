@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "A tool to bundle multiple .wa(s)t-files together.",
   "main": "index.js",
+  "bin": {
+    "waquire": "./cli.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
