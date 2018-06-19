@@ -1,4 +1,4 @@
 const waquire = require("../")
 const fs = require("fs")
 
-fs.writeFileSync("./bundle.wast", waquire("./test.wast"))
+fs.writeFileSync("./boot.wast", waquire("./test.wast"))
