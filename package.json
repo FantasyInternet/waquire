@@ -1,7 +1,14 @@
 {
   "name": "waquire",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A tool to bundle multiple .wa(s)t-files together.",
+  "keywords": [
+    "wasm",
+    "webassembly",
+    "wat",
+    "wast",
+    "require"
+  ],
   "main": "index.js",
   "bin": {
     "waquire": "./cli.js"
