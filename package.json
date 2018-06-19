@@ -1,6 +1,6 @@
 {
   "name": "waquire",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A tool to bundle multiple .wa(s)t-files together.",
   "main": "index.js",
   "bin": {
