@@ -5,10 +5,9 @@ let namespaces = []
 
 function waquire(filename) {
   namespaces = []
-  return bundle(filename)
+  return bundle(require.resolve(filename, { paths: [__dirname] }))
 }
 function bundle(filename) {
-  filename = path.resolve(filename)
   let ns = namespaces.indexOf(filename)
   if (ns >= 0) return ""
   ns = namespaces.length
@@ -23,7 +22,7 @@ function bundle(filename) {
     let req = wast.substring(pos, wast.indexOf("\n", pos))
     let p = 0
     let name = req.substring(p = req.indexOf("$") + 1, p = req.indexOf(" ", p))
-    let file = path.resolve(path.dirname(filename), JSON.parse(req.substr(p)))
+    let file = require.resolve(JSON.parse(req.substr(p)), { paths: [path.dirname(filename)] })
     let subwast = bundle(file)
     let subns = namespaces.indexOf(file)
     wast = renameVars(wast, "ns" + ns + "." + name + ".", "ns" + subns + ".")

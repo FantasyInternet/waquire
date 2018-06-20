@@ -1,7 +1,5 @@
 (module
-
-
-  ;; Push memory range to buffer stack.
+    ;; Push memory range to buffer stack.
   (import "env" "pushFromMemory" (func $ns1.pushFromMemory (param $ns1.offset i32) (param $ns1.length i32)))
   ;; Pop one buffer off the buffer stack and store in memory.
   (import "env" "popToMemory" (func $ns1.popToMemory (param $ns1.offset i32)))
@@ -128,7 +126,7 @@
 
 ;;"\$"
 
-
+  
 
   ;; Memory management
 
@@ -581,7 +579,7 @@
 
 ;;"\$"
 
-
+  
 
   ;; Graphic routines
 
@@ -802,15 +800,7 @@
 
 ;;"\$"
 
-
-
-
-;;--------;;--------;;--------;;--------;;--------;;--------;;--------;;
-
-
-
-
-
+  
 
 
   ;; Table for callback functions.
@@ -821,7 +811,6 @@
 
   ;; Linear memory.
   (memory $ns0.memory 1)
-    (export "memory" (memory $ns0.memory))
     (data (i32.const 0xf100) "Hello again!\n\1b[1mBold!\1b[m\n\1b[3mItalic!\1b[m\n\1b[4mUnderline!\1b[m\n\1b[9mCrossed out!\1b[m\n")
     (data (i32.const 0xf200) "Colors!\n\1b[30mblack?\1b[m\n\1b[31mred\1b[m\n\1b[32mgreen\1b[m\n\1b[33myellow\1b[m\n\1b[34mblue")
     (data (i32.const 0xf300) "\1b[m\n\1b[35mmagenta\1b[m\n\1b[36mcyan\1b[m\n\1b[37mwhite\n")
@@ -834,6 +823,7 @@
     (data (i32.const 1120) "./images/font.png");;17
     (data (i32.const 1160) "http://codeartistic.ninja");;25
     (data (i32.const 1190) "readImage");;9
+    (export "memory" (memory $ns0.memory))
 
   ;; Global variables
   (global $ns0.readImage (mut i32) (i32.const 0))
@@ -926,28 +916,6 @@
     (call $ns1.shutdown)
   )
   (export "break" (func $ns0.break))
-
-
-
-
-;;--------;;--------;;--------;;--------;;--------;;--------;;--------;;
-
-
-
-
-
- 
-  
-
- 
-
-
-
-
-
-
-
-
 )
 
 ;;"\$"

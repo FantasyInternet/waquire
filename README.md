@@ -8,6 +8,8 @@ To require a wast-file from another wast-file:
 
     (module
       ;;@require $mem "./_memory.wast"
+      ;; you can also require wast-files from node_modules:
+      ;;@require $pack "package/functions.wast"
 
       (func $init
         (call $mem.alloc (i32.const 1024))
