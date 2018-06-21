@@ -1,4 +1,5 @@
-;;@require $mem "./_memory.wast"
+(module
+  ;;@require $mem "./_memory.wast"
 
   ;; Graphic routines
 
@@ -214,3 +215,4 @@
       ))
     ))
   )
+)

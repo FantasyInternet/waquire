@@ -5,59 +5,55 @@ let namespaces = []
 
 function waquire(filename) {
   namespaces = []
-  return bundle(require.resolve(filename, { paths: [__dirname] }))
+  return wastify(bundle(require.resolve(filename, { paths: [__dirname] })))
 }
 function bundle(filename) {
   let ns = namespaces.indexOf(filename)
-  if (ns >= 0) return ""
+  if (ns >= 0) return ["module"]
   ns = namespaces.length
   namespaces.push(filename)
-  let wast = fs.readFileSync(filename)
-  wast = renameVars(wast, "", "ns" + ns + ".")
+  let tree = parse("(" + fs.readFileSync(filename)).tree
+  while (tree.length === 1 && typeof tree[0] !== "string") tree = tree[0]
+  while (tree[0] !== "module") tree = ["module", ...tree]
+  tree = renameVars(tree, "", "ns" + ns + ".")
 
-  while (true) {
-    let pos = wast.indexOf(";;@require ")
-    if (pos < 0) break
-    let req = wast.substring(pos, wast.indexOf("\n", pos))
-    let p = 0
-    let name = req.substring(p = req.indexOf("$") + 1, p = req.indexOf(" ", p))
-    let file = require.resolve(JSON.parse(req.substr(p)), { paths: [path.dirname(filename)] })
-    let subwast = bundle(file)
-    let subns = namespaces.indexOf(file)
-    pos = wast.lastIndexOf("(import")
-    wast = renameVars(wast, "ns" + ns + "." + name + ".", "ns" + subns + ".")
-    wast = wast.substr(0, pos) + subwast + wast.substr(pos = wast.indexOf("\n", pos))
-  }
-
-  return wast
-}
-
-function renameVars(wast, search, replace) {
-  wast += "\n;;\"\\$\"\n"
-  let pos = 0
-  while (true) {
-    pos = Math.min(wast.indexOf("$" + search, pos), wast.indexOf(";;", pos), wast.indexOf('"', pos))
-    if (pos < 0) break
-    if (wast.substr(pos, 2) === ";;") {
-      pos = wast.indexOf("\n", pos)
-    } else if (wast.substr(pos, 1) === '"') {
-      while (true) {
-        pos++
-        pos = Math.min(wast.indexOf("\\", pos), wast.indexOf('"', pos))
-        if (pos < 0) break
-        if (wast.substr(pos, 1) === "\\") {
-          pos++
-        } else if (wast.substr(pos, 1) === '"') {
-          break
-        }
+  let newtree = ["module"]
+  let importEnd = newtree.length
+  let token
+  while (token = tree.shift()) {
+    if (typeof token === "string") {
+      if (token.trim().substr(0, 10) === ";;@require") {
+        let args = token.trim().split(/\s+/)
+        let name = args[1].substr(1)
+        let file = require.resolve(JSON.parse(args[2]), { paths: [path.dirname(filename)] })
+        let subtree = bundle(file)
+        let subns = namespaces.indexOf(file)
+        tree = renameVars(tree, "ns" + ns + "." + name + ".", "ns" + subns + ".")
+        tree.splice(0, 0, ...subtree)
       }
-      pos++
-    } else if (wast.substr(pos, 1) === '$') {
-      wast = wast.substr(0, pos + 1) + replace + wast.substr(pos + 1 + search.length)
-      pos++
+    } else if (token[0] === "import") {
+      newtree.splice(importEnd++, 0, token)
+    } else {
+      newtree.push(token)
     }
   }
-  return wast
+
+  return newtree
+}
+
+function renameVars(tree, search, replace) {
+  let out = []
+  for (let token of tree) {
+    if (typeof token === "string") {
+      if (token.substr(0, 1 + search.length) === "$" + search) {
+        token = "$" + replace + token.substr(1 + search.length)
+      }
+    } else {
+      token = renameVars(token, search, replace)
+    }
+    out.push(token)
+  }
+  return out
 }
 
 function parse(wast, pos) {
@@ -65,10 +61,13 @@ function parse(wast, pos) {
   let tree = []
   let token = ""
   pos++
-  while (wast[pos] !== ")" || pos > wast.length) {
-    if (wast.substr(pos, 2) === ";;") {
+  while (wast[pos] !== ")" && pos < wast.length) {
+    if (wast.substr(pos, 3) === "(;;") {
       if (token) tree.push(token)
-      token = wast.substring(pos, pos = wast.indexOf("\n", pos))
+      token = wast.substring(pos, pos = wast.indexOf(";;)", pos) + 3)
+    } else if (wast.substr(pos, 2) === ";;") {
+      if (token) tree.push(token)
+      token = wast.substring(pos, pos = wast.indexOf("\n", pos) + 1)
     } else if (wast.substr(pos, 1) === '"') {
       if (token) tree.push(token)
       token = wast[pos]
@@ -108,5 +107,18 @@ function parse(wast, pos) {
   }
 }
 //console.log(JSON.stringify(parse('(module(import"env""pri nt"(func$print)))'), null, 2))
+function wastify(tree, indent) {
+  indent = indent || "  "
+  let str = "("
+  for (let token of tree) {
+    if (typeof token === "string") {
+      str += token + " "
+    } else {
+      str += "\n" + indent + wastify(token, indent + "  ")
+    }
+  }
+  return str + ")"
+}
+// console.log(wastify(parse(""+fs.readFileSync("./test/boot.wast")).tree))
 
 module.exports = waquire

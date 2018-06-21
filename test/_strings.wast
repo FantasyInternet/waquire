@@ -1,4 +1,5 @@
-;;@require $fi "./_fantasyinternet.wast"
+(
+  ;;@require $fi "./_fantasyinternet.wast"
 
 ;;@require $mem "./_memory.wast"
 
@@ -7,6 +8,7 @@
   (func $printStr (param $str i32)
     (call $fi.print (call $fi.pushFromMemory (call $mem.getPartOffset (get_local $str)) (call $mem.getPartLength (get_local $str))))
   )
+  
   
   (func $createString (param $srcOffset i32) (result i32)
     (local $str i32)
@@ -64,7 +66,7 @@
     (call $mem.resizePart (get_local $str) (get_local $l))
   )
   
-  (func $usascii (param $str i32)
+  (;;func $usascii (param $str i32)
     (local $i i32)
     (local $l i32)
     (set_local $i (call $mem.getPartOffset (get_local $str)))
@@ -78,7 +80,7 @@
       (set_local $l (i32.sub (get_local $l) (i32.const 1)))
       (br 0)
     ))
-  )
+  ;;)
   
   (func $getLine (param $str i32) (param $linenum i32) (result i32)
     (local $line i32)
@@ -242,3 +244,4 @@
     (call $mem.resizePart (get_local $str) (get_local $l))
   )
 
+)
