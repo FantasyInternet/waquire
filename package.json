@@ -1,6 +1,6 @@
 {
   "name": "waquire",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A tool to bundle multiple .wa(s)t-files together.",
   "keywords": [
     "wasm",

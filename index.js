@@ -12,9 +12,8 @@ function bundle(filename) {
   if (ns >= 0) return ["module"]
   ns = namespaces.length
   namespaces.push(filename)
-  let tree = parse("(" + fs.readFileSync(filename)).tree
+  let tree = parse("(\n" + fs.readFileSync(filename)).tree
   while (tree.length === 1 && typeof tree[0] !== "string") tree = tree[0]
-  while (tree[0] !== "module") tree = ["module", ...tree]
   tree = renameVars(tree, "", "ns" + ns + ".")
 
   let newtree = ["module"]
@@ -64,10 +63,10 @@ function parse(wast, pos) {
   while (wast[pos] !== ")" && pos < wast.length) {
     if (wast.substr(pos, 3) === "(;;") {
       if (token) tree.push(token)
-      token = wast.substring(pos, pos = wast.indexOf(";;)", pos) + 3)
+      token = wast.substring(pos, 1 + (pos = wast.indexOf(";;)", pos) + 2))
     } else if (wast.substr(pos, 2) === ";;") {
       if (token) tree.push(token)
-      token = wast.substring(pos, pos = wast.indexOf("\n", pos) + 1)
+      token = wast.substring(pos, 1 + (pos = wast.indexOf("\n", pos)))
     } else if (wast.substr(pos, 1) === '"') {
       if (token) tree.push(token)
       token = wast[pos]
